@@ -1,0 +1,102 @@
+.nav_li,.nav_li .nav_a {  
+            text-decoration: none;  
+            list-style-type: none;  
+            font-family: "宋体";  
+            font-size: 22px; 
+            /* font-weight:bold;  */
+            color: #FFF;  
+        }  
+        #xiala{
+        	text-decoration: none;  
+            list-style-type: none;  
+            font-family: "宋体";  
+            font-size: 16px; 
+            /* font-weight:bold; */ 
+            color: #FFF;
+			width:120px;
+        }  
+          
+        .btn1 {  
+            display: block;  
+            /* border: 1px solid #ddd; */  
+            width: 100px;  
+            height: 28px;  
+            text-align: center;  
+            line-height: 28px;  
+        }  
+          
+        .nav_ul {  
+            z-index:9999;
+            margin-top: 1px;  
+            position: absolute; /*设置绝对定位，宽度为内容宽度*/  
+            left: -999em;   /*设置隐藏*/  
+            padding: 0;  /*离它的父元素的边界为0，所以可以位于父元素li的正下方*/  
+            /* text-align:center; */
+        }  
+          
+        .nav_ul .nav_li .nav_a {
+            /* z-index:9999; */  
+            display: inline-block;  /*菜单项宽度未知，设置inline－block宽度为内容宽度*/  
+            /* border-top: 1px solid #ddd;  
+            border-left: 1px solid #ddd;  
+            border-right: 1px solid #ddd;  */ 
+            height: 30px;  
+            padding: 0 10px;  
+            line-height: 30px; 
+            background:#B22222; 
+            /* list-style-type:none; */
+            /* border-bottom: 1px solid #ddd; */
+        }  
+          
+        .last {  
+            border-bottom: 0px solid #ddd;  
+        }  
+          
+        .btn_self:hover ul {  
+            left: auto; /*默认ul的padding为0，位于按钮正下方*/  
+        }  
+          
+        .nav_ul .nav_li .nav_a:hover {  
+            background-color: #ddd; 
+            
+            text-decoration: none; 
+        }  
+        .btn_self{  
+            display: inline-block; /*设置btn是inline－block，   默认宽度为内容宽度，则鼠标只会在hover到按钮区域时才会展开下拉菜单*/ 
+            padding:5px 10px; 
+        }  
+        #navarea{
+            /* z-index:9999; */
+        	height:60px;
+        	background:#B22222;
+        }
+        #navtext{
+        	position:relative;
+        	top:10px;
+        	text-align:center;
+        }
+        /* #myCarousel{    图片轮播区域控制
+            z-index:2;
+            position:relative;
+            left:10%;
+        	width:80%;
+        	height:400px;
+        }
+        .loca{      控制左右切换按钮的位置
+        	position:relative;
+        	top:180px;
+        }
+        .item{    控制轮播图片的高度
+        	height:400px;
+        }
+        
+        .btn{        按钮更多
+        	position:relative;
+        	top:15px;
+        	width:60px;
+        }
+        .img-thumbnail{
+            width:130px;
+            hight:130px;
+            margin:4px;
+        } */

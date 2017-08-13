@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+    ">
+    
+    <context:property-placeholder location="classpath:/jdbc.properties"/>   <!-- 资源文件的位置和文件名称 -->
+    
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>  <!-- 表示自动为Spring容器中哪些配置了@aspectj切面的bean创建代理，织入切面 -->
+    
+    <context:component-scan base-package="org.hust">   <!-- 所有注解的扫描包 -->
+    	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>   <!-- 排除Controller的注解 -->
+    </context:component-scan>
+    
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    	<property name="url" value="jdbc:mysql://localhost:3306/hust_ismdDB"/>
+    	<property name="username" value="root"/>
+    	<property name="password" value="1234"/>
+    	<!-- 此处${}的值会去上方配置的property-placeholder中所配置文件中查找 -->
+    </bean>
+    
+    <bean name="SessionFactory" id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <!-- <property name="configLocation" value="/WEB-INF/applicationContext.xml"></property> -->
+    	<property name="dataSource" ref="dataSource"/>    <!-- 此处的ref即为上方配置的数据源，也即通过该配置，sessionFactory创建的session即可使用上方的数据库了 -->
+    	<property name="hibernateProperties">
+    		<props>
+    			<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>  <!-- 方言 -->
+    			<prop key="hibernate.show_sql">true</prop>  <!-- 是否在日志中显示出hibernate所执行的sql语句 -->
+    			<prop key="hibernate.format_sql">true</prop>
+    			<prop key="hibernate.cache.use_second_level_cache">false</prop>  <!-- 是否使用二级缓存 -->
+    			<prop key="hibernate.cache.use_query_cache">false</prop>  <!-- 是否使用查询缓存 -->
+    			<prop key="current_session_context_class">thread</prop>   <!-- 基于线程事务的控制方式 -->
+    			<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>  <!-- 表明使用的就是spring的事务控制 -->
+    		</props>
+    	</property>
+    	<property name="packagesToScan">
+    		<list>
+    			<value>org.hust.ismd.entity</value>  <!-- 。。表示多级目录 -->
+    		</list>
+    	</property>
+    </bean>
+    
+    <!-- 事务管理 -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    	<property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <!-- 事务增强 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+    	<tx:attributes>
+    		<tx:method name="get*" read-only="true" propagation="REQUIRED"/>
+    		<tx:method name="list*" read-only="true" propagation="REQUIRED"/>
+    		<tx:method name="find*" read-only="true" propagation="REQUIRED"/>
+    		<tx:method name="*" propagation="REQUIRED" rollback-for="Exception"/>
+    	</tx:attributes>
+    </tx:advice>
+    
+    <aop:config proxy-target-class="true">  <!-- 表示org.hust.ismd.*.service包下的所有 *Service类的所有public方法都会使用上面的事务管理-->
+    	<aop:advisor pointcut="execution(public * org.hust.ismd.service.*Service.*(..))" advice-ref="txAdvice"/>
+    </aop:config>
+    
+</beans>
